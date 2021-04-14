@@ -5,6 +5,7 @@
  *      Author: Alexandre Magalhães
  */
 
+#include <stdbool.h>
 #include "configGPIO.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
@@ -19,6 +20,7 @@
 #define GPIO_OUTPUT_PIN_SEL ((1ULL<<LED_ON)|(1ULL<<DHT_STATUS)|(1ULL<<LAMP))
 #define GPIO_INPUT_PIN_SEL  ((1ULL<<SWITCH_0) | (1ULL<<SWITCH_1))
 
+GPIO_STATUS gpioStatus;
 
 void inicializaGPIO(void) {
 
@@ -37,10 +39,36 @@ void inicializaGPIO(void) {
     io_conf.pull_up_en = GPIO_PULLUP_ENABLE;
     gpio_config(&io_conf);
 
+    // Cria a task para leitura dos leds
     xTaskCreate(leds, "leds", (1024 * 5), NULL, 1, NULL);
 
 }
 
 void leds (void *pvParameter) {
 
+	while(true) {
+
+		// Seta os pinos de saídas
+		gpio_set_level(LED_ON, getLedOn());
+		gpio_set_level(DHT_STATUS, getDhtStatus());
+		gpio_set_level(LAMP, getLampStatus());
+
+		// Atraso da task
+		vTaskDelay(100 / portTICK_PERIOD_MS);
+	}
+}
+
+bool getLedOn(void) {
+
+	return gpioStatus.ledOn;
+}
+
+bool getDhtStatus(void) {
+
+	return gpioStatus.dhtStatus;
+}
+
+bool getLampStatus(void) {
+
+	return gpioStatus.lamp;
 }
