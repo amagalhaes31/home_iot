@@ -27,7 +27,7 @@
 #define SENSOR_0	GPIO_NUM_26
 #define SENSOR_1	GPIO_NUM_27
 
-#define GPIO_OUTPUT_PIN_SEL ((1ULL<<LED_ETH)|(1ULL<<LED_DHT)|(1ULL<<LAMP_0)|(1ULL<<LAMP_1)|(1ULL<<LAMP_2))
+#define GPIO_OUTPUT_PIN_SEL ((1ULL<<LED_ETH)|(1ULL<<LED_DHT)|(1ULL<<LED_SENSOR)|(1ULL<<LAMP_0)|(1ULL<<LAMP_1)|(1ULL<<LAMP_2))
 #define GPIO_INPUT_PIN_SEL  ((1ULL<<SWITCH_0)|(1ULL<<SWITCH_1)|(1ULL<<SWITCH_2)|(1ULL<<SENSOR_0)|(1ULL<<SENSOR_1))
 
 // Variáveis Globais
@@ -60,33 +60,32 @@ void saidasGPIO (void *pvParameter) {
 
 	while(true) {
 
-		/**** Seta os pinos de saídas ****/
-		//
-		gpio_set_level(LED_ETH, getLedEthernet());
-		gpio_set_level(LED_DHT, getDhtStatus());
-
+		/*****************************************************/
+		/************** Seta os pinos de saídas **************/
+		/*****************************************************/
+		// Seta os LEDs
+		int8_t statusLeds = getLedStatus();
+		gpio_set_level(LED_ETH, (statusLeds&0x01)>>0);
+		gpio_set_level(LED_DHT, (statusLeds&0x02)>>1);
+		gpio_set_level(LED_SENSOR, (statusLeds&0x04)>>2);
 		// Seta as lampadas
 		int8_t statusLamp = getLampStatus();
 		gpio_set_level(LAMP_0, (statusLamp&0x01)>>0);
 		gpio_set_level(LAMP_1, (statusLamp&0x02)>>1);
 		gpio_set_level(LAMP_2, (statusLamp&0x04)>>2);
 
+
 		// Atraso da task
 		vTaskDelay(500 / portTICK_PERIOD_MS);
 	}
 }
 
-bool getLedEthernet(void) {
+uint8_t getLedStatus(void) {
 
-	return gpioStatus.ledOn;
-}
-
-bool getDhtStatus(void) {
-
-	return gpioStatus.dhtStatus;
+	return gpioStatus.leds;
 }
 
 uint8_t getLampStatus(void) {
 
-	return gpioStatus.lamp;
+	return gpioStatus.lamps;
 }
