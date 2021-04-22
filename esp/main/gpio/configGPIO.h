@@ -21,7 +21,7 @@ typedef struct {
 }GPIO_STATUS;
 
 void inicializaGPIO(void);
-void leds (void *pvParameter);
+void saidasGPIO(void *pvParameter);
 bool getLedEthernet(void);
 bool getDhtStatus(void);
 uint8_t getLampStatus(void);

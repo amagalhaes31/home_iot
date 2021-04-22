@@ -52,11 +52,11 @@ void inicializaGPIO(void) {
     gpio_config(&io_conf);
 
     // Cria a task para leitura dos leds
-    xTaskCreate(leds, "leds", (1024 * 5), NULL, 1, NULL);
+    xTaskCreate(saidasGPIO, "saidasGPIO", (1024 * 5), NULL, 1, NULL);
 
 }
 
-void leds (void *pvParameter) {
+void saidasGPIO (void *pvParameter) {
 
 	while(true) {
 
