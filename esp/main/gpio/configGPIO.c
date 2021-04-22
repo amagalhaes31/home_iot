@@ -5,22 +5,34 @@
  *      Author: Alexandre Magalhães
  */
 
+// Bibliotecas
 #include <stdbool.h>
 #include "configGPIO.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #include "driver/gpio.h"
 
-#define LED_ON 		GPIO_NUM_2
-#define DHT_STATUS 	GPIO_NUM_15
-#define LAMP 		GPIO_NUM_18
-#define SWITCH_0	GPIO_NUM_32
-#define SWITCH_1	GPIO_NUM_33
+// Definições do hardware
+#define LED_ETH 	GPIO_NUM_2
+#define LED_DHT 	GPIO_NUM_15
+#define LED_SENSOR	GPIO_NUM_16
+#define LAMP_0 		GPIO_NUM_17
+#define LAMP_1 		GPIO_NUM_18
+#define LAMP_2 		GPIO_NUM_19
 
-#define GPIO_OUTPUT_PIN_SEL ((1ULL<<LED_ON)|(1ULL<<DHT_STATUS)|(1ULL<<LAMP))
-#define GPIO_INPUT_PIN_SEL  ((1ULL<<SWITCH_0) | (1ULL<<SWITCH_1))
+#define SWITCH_0	GPIO_NUM_34
+#define SWITCH_1	GPIO_NUM_36
+#define SWITCH_2	GPIO_NUM_39
+#define SENSOR_DHT	GPIO_NUM_32
+#define SENSOR_0	GPIO_NUM_26
+#define SENSOR_1	GPIO_NUM_27
 
+#define GPIO_OUTPUT_PIN_SEL ((1ULL<<LED_ETH)|(1ULL<<LED_DHT)|(1ULL<<LAMP_0)|(1ULL<<LAMP_1)|(1ULL<<LAMP_2))
+#define GPIO_INPUT_PIN_SEL  ((1ULL<<SWITCH_0)|(1ULL<<SWITCH_1)|(1ULL<<SWITCH_2)|(1ULL<<SENSOR_0)|(1ULL<<SENSOR_1))
+
+// Variáveis Globais
 GPIO_STATUS gpioStatus;
+
 
 void inicializaGPIO(void) {
 
@@ -48,17 +60,23 @@ void leds (void *pvParameter) {
 
 	while(true) {
 
-		// Seta os pinos de saídas
-		gpio_set_level(LED_ON, getLedOn());
-		gpio_set_level(DHT_STATUS, getDhtStatus());
-		gpio_set_level(LAMP, getLampStatus());
+		/**** Seta os pinos de saídas ****/
+		//
+		gpio_set_level(LED_ETH, getLedEthernet());
+		gpio_set_level(LED_DHT, getDhtStatus());
+
+		// Seta as lampadas
+		int8_t statusLamp = getLampStatus();
+		gpio_set_level(LAMP_0, (statusLamp&0x01)>>0);
+		gpio_set_level(LAMP_1, (statusLamp&0x02)>>1);
+		gpio_set_level(LAMP_2, (statusLamp&0x04)>>2);
 
 		// Atraso da task
-		vTaskDelay(100 / portTICK_PERIOD_MS);
+		vTaskDelay(500 / portTICK_PERIOD_MS);
 	}
 }
 
-bool getLedOn(void) {
+bool getLedEthernet(void) {
 
 	return gpioStatus.ledOn;
 }
@@ -68,7 +86,7 @@ bool getDhtStatus(void) {
 	return gpioStatus.dhtStatus;
 }
 
-bool getLampStatus(void) {
+uint8_t getLampStatus(void) {
 
 	return gpioStatus.lamp;
 }

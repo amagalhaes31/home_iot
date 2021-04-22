@@ -29,6 +29,7 @@ void app_main(void)
 	}
 	ESP_ERROR_CHECK(ret);
 
+	// Inicializa os pinos de entradas e saídas do módulo
 	inicializaGPIO();
 }
 
