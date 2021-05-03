@@ -11,24 +11,8 @@
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #include "driver/gpio.h"
+#include "../hardwareDefinitions.h"
 
-// Definições do hardware
-#define LED_ETH 	GPIO_NUM_2
-#define LED_DHT 	GPIO_NUM_15
-#define LED_SENSOR	GPIO_NUM_16
-#define LAMP_0 		GPIO_NUM_17
-#define LAMP_1 		GPIO_NUM_18
-#define LAMP_2 		GPIO_NUM_19
-
-#define SWITCH_0	GPIO_NUM_34
-#define SWITCH_1	GPIO_NUM_36
-#define SWITCH_2	GPIO_NUM_39
-#define SENSOR_DHT	GPIO_NUM_32
-#define SENSOR_0	GPIO_NUM_26
-#define SENSOR_1	GPIO_NUM_27
-
-#define GPIO_OUTPUT_PIN_SEL ((1ULL<<LED_ETH)|(1ULL<<LED_DHT)|(1ULL<<LED_SENSOR)|(1ULL<<LAMP_0)|(1ULL<<LAMP_1)|(1ULL<<LAMP_2))
-#define GPIO_INPUT_PIN_SEL  ((1ULL<<SWITCH_0)|(1ULL<<SWITCH_1)|(1ULL<<SWITCH_2)|(1ULL<<SENSOR_0)|(1ULL<<SENSOR_1))
 
 // Variáveis Globais
 GPIO_STATUS gpioStatus;
@@ -72,10 +56,10 @@ void inicializaGPIO(void) {
     gpio_config(&io_conf);
 
     // Cria a task para ligar/desativar as saidas
-    xTaskCreate(saidasGPIO, "saidasGPIO", (1024 * 5), NULL, 1, NULL);
+    xTaskCreate(saidasGPIO, "saidasGPIO", (configMINIMAL_STACK_SIZE * 5), NULL, 1, NULL);
 
     // Cria a task para ler as entradas GPIOs
-    xTaskCreate(entradasGPIO, "entradasGPIO", (1024 * 5), NULL, 1, NULL);
+    xTaskCreate(entradasGPIO, "entradasGPIO", (configMINIMAL_STACK_SIZE * 5), NULL, 3, NULL);
 
 }
 
