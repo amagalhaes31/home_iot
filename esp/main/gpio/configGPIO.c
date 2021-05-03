@@ -34,6 +34,26 @@
 GPIO_STATUS gpioStatus;
 
 
+uint8_t getLedStatus(void) {
+
+	return gpioStatus.leds;
+}
+
+uint8_t getLampStatus(void) {
+
+	return gpioStatus.lamps;
+}
+
+void setInputsStatus(GPIO_INPUTS inputs) {
+
+	gpioStatus.gpioInputs = inputs;
+}
+
+GPIO_INPUTS getInputsStatus(void) {
+
+	return gpioStatus.gpioInputs;
+}
+
 void inicializaGPIO(void) {
 
 	// Configura o pinos de saída
@@ -51,8 +71,11 @@ void inicializaGPIO(void) {
     io_conf.pull_up_en = GPIO_PULLUP_ENABLE;
     gpio_config(&io_conf);
 
-    // Cria a task para leitura dos leds
+    // Cria a task para ligar/desativar as saidas
     xTaskCreate(saidasGPIO, "saidasGPIO", (1024 * 5), NULL, 1, NULL);
+
+    // Cria a task para ler as entradas GPIOs
+    xTaskCreate(entradasGPIO, "entradasGPIO", (1024 * 5), NULL, 1, NULL);
 
 }
 
@@ -80,12 +103,23 @@ void saidasGPIO (void *pvParameter) {
 	}
 }
 
-uint8_t getLedStatus(void) {
+void entradasGPIO (void *pvParameter) {
 
-	return gpioStatus.leds;
-}
+	GPIO_INPUTS gpioInputs;
 
-uint8_t getLampStatus(void) {
+	while (true) {
 
-	return gpioStatus.lamps;
+		/*****************************************************/
+		/*********** Leitura dos pinos de entradas ***********/
+		/*****************************************************/
+		gpioInputs.switch0 = gpio_get_level(SWITCH_0);
+		gpioInputs.switch1 = gpio_get_level(SWITCH_1);
+		gpioInputs.switch2 = gpio_get_level(SWITCH_2);
+		gpioInputs.sensor0 = gpio_get_level(SENSOR_0);
+		gpioInputs.sensor1 = gpio_get_level(SENSOR_1);
+		setInputsStatus(gpioInputs);
+
+		// Atraso da task
+		vTaskDelay(100 / portTICK_PERIOD_MS);
+	}
 }

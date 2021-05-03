@@ -13,15 +13,26 @@
 #include <stddef.h>
 
 typedef struct {
+	uint8_t switch0 : 1;
+	uint8_t switch1 : 1;
+	uint8_t switch2 : 1;
+	uint8_t sensor0 : 1;
+	uint8_t sensor1 : 1;
+}GPIO_INPUTS;
+
+typedef struct {
 	uint8_t leds;
 	uint8_t lamps;
-	bool switch_0: 1;
-	bool switch_1: 1;
+	GPIO_INPUTS gpioInputs;
 }GPIO_STATUS;
 
-void inicializaGPIO(void);
-void saidasGPIO(void *pvParameter);
+
 uint8_t getLedStatus(void);
 uint8_t getLampStatus(void);
+void setInputsStatus(GPIO_INPUTS inputs);
+GPIO_INPUTS getInputsStatus(void);
+void inicializaGPIO(void);
+void saidasGPIO(void *pvParameter);
+void entradasGPIO(void *pvParameter);
 
 #endif /* MAIN_GPIO_CONFIGGPIO_H_ */
