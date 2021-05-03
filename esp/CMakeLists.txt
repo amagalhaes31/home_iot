@@ -3,4 +3,6 @@
 cmake_minimum_required(VERSION 3.5)
 
 include($ENV{IDF_PATH}/tools/cmake/project.cmake)
+set (EXTRA_COMPONENT_DIRS "C:/espressif/esp-aws-iot")
+set (EXTRA_COMPONENT_DIRS "C:/espressif/esp-idf-lib/components")
 project(app-template)
