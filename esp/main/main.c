@@ -16,6 +16,7 @@
 #include "esp_system.h"
 #include "nvs_flash.h"
 #include "gpio/configGPIO.h"
+#include "sensorDHT/sensorDHT.h"
 
 
 // Função principal
@@ -31,5 +32,8 @@ void app_main(void)
 
 	// Inicializa os pinos de entradas e saídas do módulo
 	inicializaGPIO();
+
+	// Inicializa o sensor de Temperatura/Umidade (DHT11)
+	inicializaSensorDHT();
 }
 
