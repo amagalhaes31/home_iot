@@ -17,6 +17,7 @@
 #include "nvs_flash.h"
 #include "gpio/configGPIO.h"
 #include "sensorDHT/sensorDHT.h"
+#include "wifi/wifi.h"
 
 
 // Função principal
@@ -35,5 +36,8 @@ void app_main(void)
 
 	// Inicializa o sensor de Temperatura/Umidade (DHT11)
 	inicializaSensorDHT();
+
+	// Inicializa a pilha Wifi
+	inicializaWifi();
 }
 

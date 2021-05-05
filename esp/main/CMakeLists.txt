@@ -4,7 +4,8 @@ set(COMPONENT_PRIV_REQUIRES )
 
 set(COMPONENT_SRCS  "main.c" 
 					"gpio/configGPIO.c"
-					"sensorDHT/sensorDHT.c")
+					"sensorDHT/sensorDHT.c"
+					"wifi/wifi.c")
 set(COMPONENT_ADD_INCLUDEDIRS "")
 
 register_component()
