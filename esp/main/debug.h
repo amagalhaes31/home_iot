@@ -11,6 +11,7 @@
 // 1: Habilita o debug
 // 0: Desabilita o debug
 
-#define DEBUG_DHT	1
+#define DEBUG_DHT	0
+#define DEBUG_WIFI	1
 
 #endif /* MAIN_DEBUG_H_ */
