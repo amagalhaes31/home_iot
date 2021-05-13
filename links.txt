@@ -1,0 +1,7 @@
+https://docs.aws.amazon.com/freertos/latest/userguide/getting_started_espressif.html
+https://blog.agilevision.io/esp32-and-aws-iot-tutorial
+https://exploreembedded.com/wiki/Secure_IOT_with_AWS_and_Hornbill_ESP32
+https://edukit.workshop.aws/en/blinky-hello-world/blinking-the-leds.html
+https://docs.losant.com/guides/getting-started-with-esp32-and-esp-idf/#create-a-new-esp-idf-project
+
+https://github.com/PacktPublishing/Internet-of-Things-Projects-with-ESP32
